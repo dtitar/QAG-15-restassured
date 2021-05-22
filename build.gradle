@@ -1,0 +1,44 @@
+plugins {
+    id 'java-library'
+    id "io.freefair.lombok" version "5.3.0"
+}
+
+repositories {
+    mavenCentral()
+}
+
+def junitVersion = "5.7.1",
+    assertjVersion = "3.19.0",
+    aspectjVersion = "1.9.6",
+    ownerVersion = "1.0.12",
+    jacksonVersion = "2.11.2",
+    restAssuredVersion = "4.3.1"
+
+dependencies {
+    testImplementation(
+            "org.aspectj:aspectjweaver:$aspectjVersion",
+            "org.aeonbits.owner:owner:$ownerVersion",
+            "org.assertj:assertj-core:$assertjVersion",
+            "io.rest-assured:rest-assured:$restAssuredVersion",
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(Test) {
+    systemProperties(System.getProperties())
+    useJUnitPlatform()
+
+    testLogging {
+        lifecycle {
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+}
